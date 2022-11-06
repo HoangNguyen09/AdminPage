@@ -1,0 +1,201 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <%- include('../partials/head') %>
+</head>
+
+<body id="page-top">
+
+    <!-- Page Wrapper -->
+    <div id="wrapper">
+
+        <!-- slide trái -->
+        <%- include('../partials/left') %>
+            <!-- End slide trái -->
+
+            <!-- Content Wrapper -->
+            <div id="content-wrapper" class="d-flex flex-column">
+
+                <!-- Main Content -->
+                <div id="content">
+
+                    <!-- Top bar -->
+                    <%- include('../partials/top') %>
+                        <!-- End of Top bar -->
+
+                        <!-- Begin Page Content -->
+                        <div class="container-fluid" style="margin: 20px 0;">
+                            <a href="/admin/movies" class="btn btn-success mb-4">Back</a>
+                            <div class="d-flex">
+                                <div style="min-width: 10%;">
+                                    <h3 class="text-center">
+                                        Episodes
+                                    </h3>
+                                    <hr>
+                                    <div id="list-eps" class="overflow-auto" style="height: 550px;">
+                                        <% episodes.forEach(episode=> { %>
+                                            <a href="javascript:void(0)" class="btn btn-warning my-2 d-block"
+                                                id="ep-<%- episode.id %>" data-episode="<%- episode.episode %>"
+                                                data-hls="<%- episode.hls %>" data-id="<%- episode.id %>"
+                                                onclick="getFullLink(this)">
+                                                <%- episode.episode %>
+                                            </a>
+                                            <% }); %>
+                                    </div>
+                                    <div class="mt-2">
+                                        <button class="btn btn-info" data-toggle="modal" data-target="#addEpisode">
+                                            <i class="fa-solid fa-plus"></i>
+                                        </button>
+                                        <button class="btn btn-primary" data-toggle="modal"
+                                            data-target="#addMultiEpisode">
+                                            <i class="fa-solid fa-plus"></i>
+                                            <i class="fa-solid fa-plus"></i>
+                                        </button>
+                                        <button class="btn btn-danger" id="deleteEpisode">
+                                            <i class="fa-solid fa-trash-can"></i>
+                                        </button>
+                                    </div>
+                                </div>
+                                <div style="min-width: 80%; padding-left: 1rem;">
+                                    <h3 class="text-center">
+                                        <%- movie.name %>
+                                    </h3>
+                                    <input type="hidden" value="<%- movie.id %>" id="idMovie">
+                                    <hr>
+                                    <div id="episode-detail" class="w-100 d-flex" style="display: none !important;">
+                                        <div style="width: 60%;">
+                                            <div>
+                                                <iframe frameborder="0" class="w-100"
+                                                    style="height: 400px; display: none;" id="player"></iframe>
+                                                <div id="mediaplayer" style="display: none;"></div>
+                                            </div>
+                                            <div id="list-link" class="mt-2"></div>
+                                        </div>
+                                        <div style="width: 40%; padding-left: 1rem;">
+                                            <div>
+                                                <h4 class="text-center">
+                                                    Update Link
+                                                </h4>
+                                                <div class="form-group">
+                                                    <label for="ep">Episode:</label>
+                                                    <input type="text" class="form-control" id="updateEp" disabled
+                                                        autocomplete="off">
+                                                </div>
+                                                <div class="form-group">
+                                                    <label for="server">Server:</label>
+                                                    <input type="text" class="form-control" id="updateServer" disabled
+                                                        autocomplete="off">
+                                                </div>
+                                                <div class="form-group">
+                                                    <label for="link">Link:</label>
+                                                    <input type="text" class="form-control" id="updateLink"
+                                                        autocomplete="off">
+                                                </div>
+                                                <input type="hidden" id="idLink">
+                                                <div id="linkAction" style="display: none;">
+                                                    <button class="btn btn-primary" id="saveUpdateLink">Save</button>
+                                                    <button class="btn btn-danger" id="deleteLink"> Delete </button>
+                                                </div>
+                                                <button class="btn btn-dark" id="updateHls"> Save </button>
+                                            </div>
+                                            <hr>
+                                            <div>
+                                                <h4 class="text-center">
+                                                    Add Link
+                                                </h4>
+
+                                                <div class="form-group d-flex">
+                                                    <label for="server" style="line-height: 30px;">Server:</label>
+                                                    <select id="addLinkServer" class="w-50 form-control ml-2">
+                                                        <% servers.forEach(server=> { %>
+                                                            <option value="<%- server.id %>">
+                                                                <%- server.name %>
+                                                            </option>
+                                                            <% }); %>
+                                                    </select>
+                                                </div>
+                                                <div class="form-group">
+                                                    <label for="link">Link:</label>
+                                                    <input type="text" class="form-control" id="addLink"
+                                                        autocomplete="off">
+                                                </div>
+                                                <input type="hidden" id="idEpisode">
+                                                <button class="btn btn-success" id="newLink">Add</button>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="modal fade" id="addEpisode" tabindex="-1" role="dialog" aria-hidden="true">
+                            <div class="modal-dialog">
+                                <div class="modal-content">
+                                    <div class="modal-header">
+                                        <h5 class="modal-title" id="exampleModalLabel">ADD EPISODE</h5>
+                                        <button class="close" type="button" data-dismiss="modal" aria-label="Close">
+                                            <span aria-hidden="true">×</span>
+                                        </button>
+                                    </div>
+                                    <div class="modal-body">
+                                        <div>
+                                            <div class="form-group">
+                                                <label for="ep">Episode:</label>
+                                                <input type="text" class="form-control" id="addEp" autocomplete="off">
+                                            </div>
+                                            <div class="form-group">
+                                                <label for="Hls">Hls:</label>
+                                                <input type="text" class="form-control" id="addEpHls"
+                                                    autocomplete="off">
+                                            </div>
+                                            <button id="newEpisode" class="btn btn-primary">Add</button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="modal fade" id="addMultiEpisode" tabindex="-1" role="dialog" aria-hidden="true">
+                            <div class="modal-dialog" style="max-width: 40%;">
+                                <div class="modal-content">
+                                    <div class="modal-header">
+                                        <h5 class="modal-title" id="exampleModalLabel">ADD MULTI EPISODE</h5>
+                                        <button class="close" type="button" data-dismiss="modal" aria-label="Close">
+                                            <span aria-hidden="true">×</span>
+                                        </button>
+                                    </div>
+                                    <div class="modal-body">
+                                        <div>
+                                            <div class="form-group">
+                                                <div class="form-group d-flex">
+                                                    <textarea id="multiEp" class="form-control w-100"
+                                                        style="height: 400px; resize: none;"></textarea>
+                                                </div>
+                                            </div>
+                                            <button id="newMultiEpisode" class="btn btn-primary">Add</button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <!-- -->
+
+                </div>
+                <!-- End of Main Content -->
+
+                <!-- Footer -->
+                <%- include('../partials/footer') %>
+                    <!-- End of Footer -->
+
+            </div>
+            <!-- End of Content Wrapper -->
+
+    </div>
+    <!-- End of Page Wrapper -->
+
+    <%- include('../partials/bot') %>
+
+</body>
+
+</html>
